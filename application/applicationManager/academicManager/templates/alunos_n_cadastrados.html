@@ -1,0 +1,11 @@
+{% if not alunos %}
+	<p>Nenhum Aluno cadastrado</p>
+{% else %}
+	<ul>
+		{% for c in alunos %}
+		<li class="addlink">
+			<a href="{{ c.id }}">{{ c.nome|truncatechars:30 }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+{% endif %}
