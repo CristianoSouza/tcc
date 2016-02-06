@@ -77,7 +77,7 @@ class ProcessInformation(object):
 
     def check_badge(self, codeRFID):
 
-        print ("select id rfid:")
+        #print ("select id rfid:")
         code = (codeRFID)
 
         cur= self.connection.cursor()
@@ -88,9 +88,9 @@ class ProcessInformation(object):
             rows = cur.fetchall()
             print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                #print ("Existe!")
                 for row in rows:
-                    print ("   ", row[1])
+                    #print ("   ", row[1])
                     self.id_rfid = row[0]
                 return self.SUCESSO
             else:
@@ -102,7 +102,7 @@ class ProcessInformation(object):
 
     def get_id_aluno_by_rfid(self):
 
-        print ("Select id aluno:")
+        #print ("Select id aluno:")
 
         cur= self.connection.cursor()
         
@@ -110,14 +110,15 @@ class ProcessInformation(object):
             cur.execute(("Select * from \"academicManager_aluno\" where rfid_code_id = (%s)"), [self.id_rfid])
 
             rows = cur.fetchall()
-            print ("\nRows: \n")
+            #print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                a = 5
+                #print ("Existe!")
             else:
                 print ("Não Existe")
                 return 0
             for row in rows:
-                print ("   ", row[1])
+                #print ("   ", row[1])
                 self.id_aluno = row[0]
                 return
 
@@ -126,51 +127,52 @@ class ProcessInformation(object):
 
     def get_id_aula_by_aluno(self):
 
-        print ("select id disciplina:")
+        #print ("select id disciplina:")
 
         cur= self.connection.cursor()
 
-        print ("id aluno: ", self.id_aluno)
+        #print ("id aluno: ", self.id_aluno)
         
         try:
             cur.execute(("Select * from \"academicManager_alunodisciplina\" where aluno_id = (%s)"), [self.id_aluno])
 
             rows = cur.fetchall()
-            print ("\nRows: \n")
+            #print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                a = 5
+                #print ("Existe!")
             else:
                 print ("Não Existe")
 
             for row in rows:
-                print ("ID: ", row[2])
+                #print ("ID: ", row[2])
                 cur.execute(("Select * from \"academicManager_aula\" where disciplina_id = (%s) AND sala_id = (%s)"), [row[2],self.id_sala])
 
                 rows2 = cur.fetchall()
                 for row2 in rows2:
-                    print ("ID aula: ", row2)
+                    #print ("ID aula: ", row2)
                     self.list_ids_aulas.append(row2)
-            print ("LISTA>:", self.list_ids_aulas)
+            #print ("LISTA>:", self.list_ids_aulas)
     
         except:
             print ("Não foi possivel fazer consulta em academicManager_alunodisciplina!") 
 
     def check_duplicate(self, id_aula):
 
-        print ("Verificar se a presença jah esta armazenada:")
+        #print ("Verificar se a presença jah esta armazenada:")
 
         cur= self.connection.cursor()
 
-        print ("id aluno: ", self.id_aluno)
-        print ("id aula: ", id_aula)
+        #print ("id aluno: ", self.id_aluno)
+        #print ("id aula: ", id_aula)
         
         try:
             cur.execute(("Select * from \"academicManager_chamada\" where aula_id = (%s) AND aluno_id = (%s) AND presence= (%s)"), [id_aula, self.id_aluno, "P"])
 
             rows = cur.fetchall()
-            print ("\nRows: \n")
+            #print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                #print ("Existe!")
                 return True
             else:
                 print ("Não Existe")
@@ -181,27 +183,27 @@ class ProcessInformation(object):
 
     def check_time_aulas(self):
 
-        print ("verificar horario das aulas:")
-        print ("LISTA>--:", self.list_ids_aulas)
+        #print ("verificar horario das aulas:")
+        #print ("LISTA>--:", self.list_ids_aulas)
         for list in self.list_ids_aulas:
-            print ("Data Aula: ", list[2].strftime("%Y/%m/%d"))
+            #print ("Data Aula: ", list[2].strftime("%Y/%m/%d"))
             data_atual = time.strftime("%Y/%m/%d")
-            print ("Data atual: ", data_atual)
+            #print ("Data atual: ", data_atual)
             if (data_atual == list[2].strftime("%Y/%m/%d") ):
-                print ("Dia atual!")
+                #print ("Dia atual!")
                 hora_inicio_aula = list[4].strftime("%H:%M:%S")
                 hora_fim_aula = list[3].strftime("%H:%M:%S")
-                print ("Hora Inicio Aula: ", hora_inicio_aula)
-                print ("Hora Fim Aula: ", hora_fim_aula)
+                #print ("Hora Inicio Aula: ", hora_inicio_aula)
+                #print ("Hora Fim Aula: ", hora_fim_aula)
                 hora_atual = time.strftime("%H:%M:%S")
-                print ("Hora atual: ", hora_atual)
+                #print ("Hora atual: ", hora_atual)
 
                 if ( (hora_atual > hora_inicio_aula) & (hora_atual < hora_fim_aula)):
-                    print ("Horario de aula valido!")
+                    #print ("Horario de aula valido!")
                     #if (self.check_duplicate(list[0])):
                      #   print ("Presença jah esta registrada!")
                     #else:
-                    print ("Pode realizar a gravação da presença")
+                    #print ("Pode realizar a gravação da presença")
                     if (self.confirm_presence(list[0]) == self.SUCESSO):
                         return self.SUCESSO
                     else: 
@@ -213,12 +215,12 @@ class ProcessInformation(object):
         return self.FALHA_HORARIO_INVALIDO
 
     def confirm_presence(self, id_aula):
-        print ("Confirmando Presença:")
+        #print ("Confirmando Presença:")
 
         hora_atual = time.strftime("%H:%M:%S")
-        print ("Hora atual: ", hora_atual)
-        print ("id Aluno: ", self.id_aluno)
-        print ("id_aula: ", id_aula)
+        #print ("Hora atual: ", hora_atual)
+        #print ("id Aluno: ", self.id_aluno)
+        #print ("id_aula: ", id_aula)
         cur= self.connection.cursor()
         
         try:
@@ -228,7 +230,7 @@ class ProcessInformation(object):
             return self.FALHA_NO_PROCESSO
 
         self.connection.commit()
-        print ("COMMIT;")
+        #print ("COMMIT;")
         return self.SUCESSO
 
     def process_information (self, rfid_code, id_sala):
@@ -253,7 +255,7 @@ class ProcessInformation(object):
 
     def get_id_arduino(self, id_arduino):
 
-        print ("Select id arduino:")
+        #print ("Select id arduino:")
 
         cur= self.connection.cursor()
         
@@ -261,14 +263,15 @@ class ProcessInformation(object):
             cur.execute(("Select * from \"academicManager_arduino\" where id_arduino = (%s)"), [id_arduino])
 
             rows = cur.fetchall()
-            print ("\nRows: \n")
+            #print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                a = 5
+                #print ("Existe!")
             else:
                 print ("Não Existe")
                 return 0
             for row in rows:
-                print ("   ", row[1])
+                #print ("   ", row[1])
                 return row[0]
 
         except:
@@ -276,7 +279,7 @@ class ProcessInformation(object):
 
     def get_sala_by_arduino(self, id_arduino):
 
-        print ("Select id sala:")
+        #print ("Select id sala:")
 
         cur= self.connection.cursor()
         
@@ -284,14 +287,15 @@ class ProcessInformation(object):
             cur.execute(("Select * from \"academicManager_sala\" where arduino_id = (%s)"), [id_arduino])
 
             rows = cur.fetchall()
-            print ("\nRows: \n")
+            #print ("\nRows: \n")
             if (rows):
-                print ("Existe!")
+                a = 5
+                #print ("Existe!")
             else:
                 print ("Não Existe")
                 return 0
             for row in rows:
-                print ("   ", row[1], " - ", row[2], " - ", row[3])
+                #print ("   ", row[1], " - ", row[2], " - ", row[3])
                 return row[0]
 
         except:

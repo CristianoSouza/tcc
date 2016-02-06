@@ -58,9 +58,9 @@ class Server(object):
             print ("Aguardando cliente...")
             conn, addr = _socket.accept()
             
-            print ('--CONEXAO ESTABELECIDA')
-            print ('Cliente: ', addr)
-            print ('Conexão Servidor/Cliente: ', conn)
+            #print ('--CONEXAO ESTABELECIDA')
+            #print ('Cliente: ', addr)
+            #print ('Conexão Servidor/Cliente: ', conn)
             
             _thread.start_new_thread(manager_connection, tuple([_socket, conn, addr, self._buffer_size]))
 
@@ -68,7 +68,7 @@ class Server(object):
         _socket = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) 
         _socket.bind((self._ip, self._port))
-        print ("sock:",_socket)
+        #print ("sock:",_socket)
         while True:
             print ("Whille")
             data, addr = _socket.recvfrom(2048) # buffer size is 1024 bytes
@@ -93,7 +93,7 @@ class Server(object):
         self._running = False
 
 def manager_connection(_socket, conn, addr, buffer_size):
-    print ("THREAD")
+    #print ("THREAD")
 
     data = conn.recv(buffer_size)
     #data = "asd"
@@ -101,7 +101,7 @@ def manager_connection(_socket, conn, addr, buffer_size):
     print ("Informação Recebida(", addr[0],"):", string_recebida)
     print ("TRATAR INFORMAÇÃO....")
     sub_strings = string_recebida.split("-")
-    print (sub_strings)
+    #print (sub_strings)
     
     modo_operacao = sub_strings[0]
     sala =  sub_strings[1]
@@ -117,7 +117,7 @@ def manager_connection(_socket, conn, addr, buffer_size):
         message = str(sala)
         print ("MESSAGE: ", message )
         if(conn.send(message.encode())):
-            print ("Mensagem de confirmação enviada")
+            print ("Mensagem de confirmação enviada inicializacao")
         else:
             print ("ERRO: Mensagem de confirmação não pode ser enviada!")
 
@@ -162,8 +162,8 @@ def manager_connection(_socket, conn, addr, buffer_size):
 if __name__ == '__main__':
     print ("Iniciando....")
     #ip= '192.168.1.100'
-    ip= '192.168.25.2'
-    port= 5010
+    ip= '192.168.1.101'
+    port= 5015
     buffer_size= 1024
     communication_protocol= "TCP"
     server = Server(ip, port, buffer_size, communication_protocol)
